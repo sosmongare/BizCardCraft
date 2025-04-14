@@ -1,12 +1,16 @@
+/* Base styles */
 html, body {
     height: 100%;
-    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
     background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .container-fluid {
@@ -15,16 +19,19 @@ body {
     flex-direction: column;
     padding: 15px;
     max-height: 100vh;
+    width: 100%;
 }
 
 .app-header {
     margin-bottom: 10px;
+    padding: 10px 0;
 }
 
 .main-content {
     display: flex;
     flex: 1;
     overflow: hidden;
+    width: 100%;
 }
 
 .form-column, .preview-column {
@@ -54,9 +61,6 @@ body {
 /* The actual card with front and back sides */
 .card-flipper {
     position: relative;
-    /* Standard business card size in 16:9 ratio (close to US standard) */
-    /* width: 350px;
-    height: 200px; */
     width: 450px;
     height: 250px;
     transition: transform 0.8s;
@@ -291,21 +295,59 @@ body {
     top: -9999px;
 }
 
+/* Improved responsive design */
+@media (max-width: 1199.98px) {
+    .card-flipper {
+        width: 400px;
+        height: 230px;
+    }
+}
+
 @media (max-width: 991.98px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .container-fluid {
+        max-height: none;
+        padding: 10px;
+    }
+
     .main-content {
         flex-direction: column;
+        overflow: visible;
     }
     
     .form-column, .preview-column {
         width: 100%;
-        max-height: 50vh;
+        max-height: none;
+        padding: 0 5px;
     }
     
     .card-flipper {
-        width: 280px;
-        height: 160px;
+        width: 350px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .app-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .card-flipper {
+        width: 320px;
+        height: 180px;
     }
     
+    .logo-leaf {
+        font-size: 20px;
+    }
+    
+    .company-name {
+        font-size: 16px;
+    }
+
     .person-name {
         font-size: 1.1rem;
     }
@@ -321,12 +363,83 @@ body {
     .social-links {
         font-size: 0.7rem;
     }
-    
-    .logo-leaf {
-        font-size: 20px;
+
+    .form-section {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .container-fluid {
+        padding: 8px;
+    }
+
+    .card-preview-container {
+        padding: 10px;
+    }
+
+    .card-flipper {
+        width: 280px;
+        height: 160px;
+    }
+
+    .card-front, .card-back {
+        padding: 15px;
+    }
+
+    .person-name {
+        font-size: 1rem;
     }
     
-    .company-name {
-        font-size: 16px;
+    .person-title {
+        font-size: 0.75rem;
+        margin-bottom: 5px;
+    }
+    
+    .contact-info {
+        font-size: 0.7rem;
+        margin-top: 5px;
+    }
+    
+    .social-links {
+        font-size: 0.65rem;
+        margin-top: 5px;
+    }
+
+    .action-buttons {
+        gap: 5px;
+    }
+
+    /* Adjust form controls for smaller screens */
+    .form-label {
+        font-size: 0.85rem;
+    }
+
+    .compact-input {
+        font-size: 0.8rem;
+    }
+
+    /* Improve action buttons layout on very small screens */
+    .btn-sm {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    /* Make sure the form sections don't get too crowded */
+    .row {
+        margin-right: -5px;
+        margin-left: -5px;
+    }
+
+    .col-6 {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+}
+
+/* Additional styles for fixing the overflow issue */
+@media (max-height: 700px) and (max-width: 991.98px) {
+    .container-fluid {
+        padding-bottom: 30px; /* Add extra padding at the bottom to ensure content is accessible */
     }
 }
