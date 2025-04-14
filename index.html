@@ -158,7 +158,7 @@
                                     
                                     <!-- Details on the right -->
                                     <div class="details-column">
-                                        <div class="person-name" id="nameDisplay">Sospeter</div>
+                                        <div class="person-name" id="nameDisplay">Your name</div>
                                         <div class="person-title" id="titleDisplay">Landscape Designer</div>
                                         
                                         <div class="contact-info">
@@ -420,8 +420,8 @@
                     useCORS: true
                 }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = 'business-card-front.png';
-                    link.href = canvas.toDataURL('image/png');
+                    link.download = 'business-card-front.jpeg';
+                    link.href = canvas.toDataURL('image/jpeg');
                     link.click();
                 });
             });
@@ -439,8 +439,8 @@
                     useCORS: true
                 }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = 'business-card-back.png';
-                    link.href = canvas.toDataURL('image/png');
+                    link.download = 'business-card-back.jpeg';
+                    link.href = canvas.toDataURL('image/jpeg');
                     link.click();
                 });
             });
@@ -495,22 +495,22 @@
                     
                     // Convert to blobs
                     const frontBlob = await new Promise(resolve => {
-                        frontCanvas.toBlob(resolve, 'image/png');
+                        frontCanvas.toBlob(resolve, 'image/jpeg');
                     });
                     
                     const backBlob = await new Promise(resolve => {
-                        backCanvas.toBlob(resolve, 'image/png');
+                        backCanvas.toBlob(resolve, 'image/jpeg');
                     });
                     
                     // Check if we can share files
-                    if (navigator.canShare && navigator.canShare({ files: [new File([frontBlob], 'front.png')] })) {
+                    if (navigator.canShare && navigator.canShare({ files: [new File([frontBlob], 'front.jpeg')] })) {
                         // Share with files
                         navigator.share({
                             title: 'My Business Card',
                             text: 'Check out my business card',
                             files: [
-                                new File([frontBlob], 'business-card-front.png', { type: 'image/png' }),
-                                new File([backBlob], 'business-card-back.png', { type: 'image/png' })
+                                new File([frontBlob], 'business-card-front.jpeg', { type: 'image/jpeg' }),
+                                new File([backBlob], 'business-card-back.jpeg', { type: 'image/jpeg' })
                             ]
                         }).catch(err => {
                             console.error('Sharing failed:', err);

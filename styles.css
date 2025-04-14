@@ -55,8 +55,10 @@ body {
 .card-flipper {
     position: relative;
     /* Standard business card size in 16:9 ratio (close to US standard) */
-    width: 350px;
-    height: 200px;
+    /* width: 350px;
+    height: 200px; */
+    width: 450px;
+    height: 250px;
     transition: transform 0.8s;
     transform-style: preserve-3d;
 }
