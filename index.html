@@ -420,8 +420,8 @@
                     useCORS: true
                 }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = 'business-card-front.jpeg';
-                    link.href = canvas.toDataURL('image/jpeg');
+                    link.download = 'business-card-front.jpg';
+                    link.href = canvas.toDataURL('image/jpg');
                     link.click();
                 });
             });
@@ -439,8 +439,8 @@
                     useCORS: true
                 }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = 'business-card-back.jpeg';
-                    link.href = canvas.toDataURL('image/jpeg');
+                    link.download = 'business-card-back.jpg';
+                    link.href = canvas.toDataURL('image/jpg');
                     link.click();
                 });
             });
@@ -495,22 +495,22 @@
                     
                     // Convert to blobs
                     const frontBlob = await new Promise(resolve => {
-                        frontCanvas.toBlob(resolve, 'image/jpeg');
+                        frontCanvas.toBlob(resolve, 'image/jpg');
                     });
                     
                     const backBlob = await new Promise(resolve => {
-                        backCanvas.toBlob(resolve, 'image/jpeg');
+                        backCanvas.toBlob(resolve, 'image/jpg');
                     });
                     
                     // Check if we can share files
-                    if (navigator.canShare && navigator.canShare({ files: [new File([frontBlob], 'front.jpeg')] })) {
+                    if (navigator.canShare && navigator.canShare({ files: [new File([frontBlob], 'front.jpg')] })) {
                         // Share with files
                         navigator.share({
                             title: 'My Business Card',
                             text: 'Check out my business card',
                             files: [
-                                new File([frontBlob], 'business-card-front.jpeg', { type: 'image/jpeg' }),
-                                new File([backBlob], 'business-card-back.jpeg', { type: 'image/jpeg' })
+                                new File([frontBlob], 'business-card-front.jpg', { type: 'image/jpg' }),
+                                new File([backBlob], 'business-card-back.jpg', { type: 'image/jpg' })
                             ]
                         }).catch(err => {
                             console.error('Sharing failed:', err);
