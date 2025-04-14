@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BizCardCraft - Digital Business Card Creator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- QRCode.js for generating QR codes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- html2canvas for capturing the card as an image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Custom CSS for styling -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="app-header text-center">
+            <h2 class="mb-0">BizCardCraft</h2>
+            <p class="text-muted mb-0">Digital Business Card Creator</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Form Column -->
+            <div class="form-column col-lg-6">
+                <div class="form-section">
+                    <h5 class="section-title">Card Information</h5>
+                    <form id="cardForm">
+                        <div class="mb-3">
+                            <label for="companyName" class="form-label">Company Name</label>
+                            <input type="text" class="form-control compact-input" id="companyName" value="CompanyName">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control compact-input" id="name" value="Your name">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Job Title</label>
+                            <input type="text" class="form-control compact-input" id="title" value="Half-stack Developer">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control compact-input" id="phone" value="+254 (0) 712 123 456">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control compact-input" id="email" value="info@yourcompany.com">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="website" class="form-label">Website</label>
+                            <input type="text" class="form-control compact-input" id="website" value="www.yourcompany.com">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="linkedin" class="form-label">Linkedin (Optional)</label>
+                            <input type="text" class="form-control compact-input" id="linkedin" value="linkedin.com/your-company">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="facebook" class="form-label">Facebook (Optional)</label>
+                            <input type="text" class="form-control compact-input" id="facebook" value="fb.com/your-company">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="instagram" class="form-label">Instagram (Optional)</label>
+                            <input type="text" class="form-control compact-input" id="instagram" value="instagram.com/your-company">
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="form-section">
+                    <h5 class="section-title">Card Design</h5>
+                    <form id="designForm">
+                        <div class="mb-3">
+                            <label for="logoUpload" class="form-label">Upload Logo (optional)</label>
+                            <input type="file" class="form-control compact-input" id="logoUpload" accept="image/*">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="logoColor" class="form-label">
+                                    Logo Color
+                                    <span class="color-preview" id="logoColorPreview" style="background-color: #8BC34A;"></span>
+                                </label>
+                                <input type="color" class="form-control form-control-color w-100 compact-input" id="logoColor" value="#8BC34A">
+                            </div>
+                            
+                            <div class="col-6 mb-3">
+                                <label for="frontTextColor" class="form-label">
+                                    Text Color
+                                    <span class="color-preview" id="frontTextColorPreview" style="background-color: #000000;"></span>
+                                </label>
+                                <input type="color" class="form-control form-control-color w-100 compact-input" id="frontTextColor" value="#000000">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="frontBackgroundColor" class="form-label">
+                                    Front BG
+                                    <span class="color-preview" id="frontBgColorPreview" style="background-color: #FFFFFF;"></span>
+                                </label>
+                                <input type="color" class="form-control form-control-color w-100 compact-input" id="frontBackgroundColor" value="#FFFFFF">
+                            </div>
+                            
+                            <div class="col-6 mb-3">
+                                <label for="backBackgroundColor" class="form-label">
+                                    Back BG
+                                    <span class="color-preview" id="backBgColorPreview" style="background-color: #FFFFFF;"></span>
+                                </label>
+                                <input type="color" class="form-control form-control-color w-100 compact-input" id="backBackgroundColor" value="#FFFFFF">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="backMessage" class="form-label">Back Message (optional)</label>
+                            <input type="text" class="form-control compact-input" id="backMessage" value="Scan to connect">
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline-secondary btn-sm w-100" id="resetBtn">
+                            <i class="fas fa-redo-alt me-2"></i>Reset Form
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Preview Column -->
+            <div class="preview-column col-lg-6">
+                <div class="flip-button-container">
+                    <button class="flip-button" id="flipButton">
+                        <i class="fas fa-exchange-alt flip-icon"></i>
+                        <span id="flipButtonText">View Back</span>
+                    </button>
+                </div>
+                
+                <div class="card-preview-container">
+                    <div class="card-container" id="cardContainer">
+                        <div class="card-flipper">
+                            <!-- Front of card -->
+                            <div class="card-front" id="cardFront">
+                                <div class="card-front-content">
+                                    <!-- Logo on the left -->
+                                    <div class="logo-column">
+                                        <div class="company-logo" id="logoContainer">
+                                            <div class="logo-placeholder">
+                                                <i class="fas fa-leaf logo-leaf"></i>
+                                                <span class="company-name" id="companyNameDisplay">CompanyName</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Details on the right -->
+                                    <div class="details-column">
+                                        <div class="person-name" id="nameDisplay">Sospeter</div>
+                                        <div class="person-title" id="titleDisplay">Landscape Designer</div>
+                                        
+                                        <div class="contact-info">
+                                            <div><i class="fas fa-phone-alt fa-fw me-1"></i> <span id="phoneDisplay">+254 (0) 712 123 456</span></div>
+                                            <div><i class="fas fa-envelope fa-fw me-1"></i> <span id="emailDisplay">info@yourcompany.com</span></div>
+                                            <div><i class="fas fa-globe fa-fw me-1"></i> <span id="websiteDisplay">www.yourcompany.com</span></div>
+                                        </div>
+                                        
+                                        <div class="social-links">
+                                            <div><i class="fab fa-linkedin fa-fw me-1"></i> <span id="linkedinDisplay">linkedin.com/your-company</span></div>
+                                            <div><i class="fab fa-facebook fa-fw me-1"></i> <span id="facebookDisplay">fb.com/your-company</span></div>
+                                            <div><i class="fab fa-instagram fa-fw me-1"></i> <span id="instagramDisplay">instagram.com/your-company</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="flip-tip">Click card to flip</div> -->
+                            </div>
+                            
+                            <!-- Back of card -->
+                            <div class="card-back" id="cardBack">
+                                <div class="qr-container" id="qrCode"></div>
+                                <div class="card-back-text" id="backMessageDisplay">Scan to connect</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h5 class="section-title">Actions</h5>
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-primary btn-sm" id="downloadFrontBtn">
+                            <i class="fas fa-download me-1"></i>Front
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" id="downloadBackBtn">
+                            <i class="fas fa-download me-1"></i>Back
+                        </button>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button type="button" class="btn btn-success btn-sm flex-grow-1" id="shareBtn">
+                            <i class="fas fa-share-alt me-1"></i>Share
+                        </button>
+                        <button type="button" class="btn btn-info btn-sm flex-grow-1" id="downloadVcardBtn">
+                            <i class="fas fa-address-card me-1"></i>vCard
+                        </button>
+                    </div>
+                    <div id="shareUrlContainer" class="mt-2 d-none">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" id="shareUrlInput" readonly>
+                            <button class="btn btn-outline-secondary btn-sm" type="button" id="copyShareUrlBtn">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Copy this link to share your card</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden containers for clean exports -->
+    <div id="exportContainer" style="position: absolute; left: -9999px; top: -9999px;">
+        <div id="exportFront" style="width: 350px; height: 200px;"></div>
+        <div id="exportBack" style="width: 350px; height: 200px;"></div>
+    </div>
+    
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            let logoImage = null;
+            let isFlipped = false;
+            
+            // Initialize card elements
+            const cardContainer = document.getElementById('cardContainer');
+            const cardFront = document.getElementById('cardFront');
+            const cardBack = document.getElementById('cardBack');
+            const flipButton = document.getElementById('flipButton');
+            const flipButtonText = document.getElementById('flipButtonText');
+            
+            // Export elements
+            const exportContainer = document.getElementById('exportContainer');
+            const exportFront = document.getElementById('exportFront');
+            const exportBack = document.getElementById('exportBack');
+            
+            // Share fallback elements
+            const shareUrlContainer = document.getElementById('shareUrlContainer');
+            const shareUrlInput = document.getElementById('shareUrlInput');
+            const copyShareUrlBtn = document.getElementById('copyShareUrlBtn');
+            
+            // Initialize QR code
+            const qrCode = new QRCode(document.getElementById("qrCode"), {
+                text: generateVCardText(), // Using vCard format now
+                width: 150,
+                height: 150,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L
+            });
+            
+            // Get form elements
+            const cardForm = document.getElementById('cardForm');
+            const designForm = document.getElementById('designForm');
+            const resetBtn = document.getElementById('resetBtn');
+            const downloadFrontBtn = document.getElementById('downloadFrontBtn');
+            const downloadBackBtn = document.getElementById('downloadBackBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            const downloadVcardBtn = document.getElementById('downloadVcardBtn');
+            const logoUpload = document.getElementById('logoUpload');
+            const backMessage = document.getElementById('backMessage');
+            
+            // Color inputs
+            const logoColor = document.getElementById('logoColor');
+            const frontBackgroundColor = document.getElementById('frontBackgroundColor');
+            const backBackgroundColor = document.getElementById('backBackgroundColor');
+            const frontTextColor = document.getElementById('frontTextColor');
+            
+            // Color previews
+            const logoColorPreview = document.getElementById('logoColorPreview');
+            const frontBgColorPreview = document.getElementById('frontBgColorPreview');
+            const backBgColorPreview = document.getElementById('backBgColorPreview');
+            const frontTextColorPreview = document.getElementById('frontTextColorPreview');
+            
+            // Card elements
+            const logoContainer = document.getElementById('logoContainer');
+            const companyNameDisplay = document.getElementById('companyNameDisplay');
+            const backMessageDisplay = document.getElementById('backMessageDisplay');
+            
+            // Add event listeners to form inputs
+            const formInputs = cardForm.querySelectorAll('input');
+            formInputs.forEach(input => {
+                input.addEventListener('input', updateCardPreview);
+            });
+            
+            // Add event listeners to design inputs
+            logoColor.addEventListener('input', function(e) {
+                const color = e.target.value;
+                document.querySelector('.logo-leaf').style.color = color;
+                companyNameDisplay.style.color = color;
+                document.getElementById('titleDisplay').style.color = color;
+                logoColorPreview.style.backgroundColor = color;
+            });
+            
+            frontBackgroundColor.addEventListener('input', function(e) {
+                const color = e.target.value;
+                cardFront.style.backgroundColor = color;
+                frontBgColorPreview.style.backgroundColor = color;
+            });
+            
+            backBackgroundColor.addEventListener('input', function(e) {
+                const color = e.target.value;
+                cardBack.style.backgroundColor = color;
+                backBgColorPreview.style.backgroundColor = color;
+            });
+            
+            frontTextColor.addEventListener('input', function(e) {
+                const color = e.target.value;
+                cardFront.style.color = color;
+                frontTextColorPreview.style.backgroundColor = color;
+            });
+            
+            backMessage.addEventListener('input', function(e) {
+                backMessageDisplay.textContent = e.target.value;
+            });
+            
+            // Copy share URL button
+            copyShareUrlBtn.addEventListener('click', function() {
+                shareUrlInput.select();
+                document.execCommand('copy');
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 2000);
+            });
+            
+            // Logo upload handler
+            logoUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        logoImage = event.target.result;
+                        logoContainer.innerHTML = `<img src="${logoImage}" alt="Company Logo">`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Card flip handler
+            cardContainer.addEventListener('click', flipCard);
+            flipButton.addEventListener('click', flipCard);
+            
+            function flipCard(e) {
+                e.preventDefault();
+                cardContainer.classList.toggle('flipped');
+                isFlipped = !isFlipped;
+                flipButtonText.textContent = isFlipped ? 'View Front' : 'View Back';
+            }
+            
+            // Reset form
+            resetBtn.addEventListener('click', function() {
+                cardForm.reset();
+                designForm.reset();
+                logoImage = null;
+                logoContainer.innerHTML = `
+                    <div class="logo-placeholder">
+                        <i class="fas fa-leaf logo-leaf" style="color: #8BC34A;"></i>
+                        <span class="company-name" id="companyNameDisplay" style="color: #8BC34A;">CompanyName</span>
+                    </div>
+                `;
+                companyNameDisplay = document.getElementById('companyNameDisplay');
+                cardFront.style.backgroundColor = '#FFFFFF';
+                cardFront.style.color = '#000000';
+                cardBack.style.backgroundColor = '#FFFFFF';
+                cardBack.style.color = '#000000';
+                document.getElementById('titleDisplay').style.color = '#8BC34A';
+                backMessageDisplay.textContent = 'Scan to connect';
+                logoColorPreview.style.backgroundColor = '#8BC34A';
+                frontBgColorPreview.style.backgroundColor = '#FFFFFF';
+                backBgColorPreview.style.backgroundColor = '#FFFFFF';
+                frontTextColorPreview.style.backgroundColor = '#000000';
+                updateCardPreview();
+            });
+            
+            // Create a clean version of the card for export (without flip tip and other UI elements)
+            function prepareCardForExport(isFront) {
+                const sourceCard = isFront ? cardFront : cardBack;
+                const targetCard = isFront ? exportFront : exportBack;
+                
+                // Clone the card content
+                targetCard.innerHTML = sourceCard.innerHTML;
+                
+                // Copy the styles
+                targetCard.style.backgroundColor = sourceCard.style.backgroundColor;
+                targetCard.style.color = sourceCard.style.color;
+                targetCard.style.padding = sourceCard.style.padding;
+                targetCard.style.borderRadius = sourceCard.style.borderRadius;
+                
+                // Remove flip tip from the export version
+                const flipTip = targetCard.querySelector('.flip-tip');
+                if (flipTip) {
+                    flipTip.remove();
+                }
+                
+                return targetCard;
+            }
+            
+            // Download front button
+            downloadFrontBtn.addEventListener('click', function() {
+                // Prepare a clean version of the front card
+                const cleanCard = prepareCardForExport(true);
+                
+                // Use html2canvas to capture just the card
+                html2canvas(cleanCard, {
+                    backgroundColor: null,
+                    scale: 2, // Higher resolution
+                    logging: false,
+                    useCORS: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'business-card-front.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            });
+            
+            // Download back button
+            downloadBackBtn.addEventListener('click', function() {
+                // Prepare a clean version of the back card
+                const cleanCard = prepareCardForExport(false);
+                
+                // Use html2canvas to capture just the card
+                html2canvas(cleanCard, {
+                    backgroundColor: null,
+                    scale: 2, // Higher resolution
+                    logging: false,
+                    useCORS: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'business-card-back.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            });
+            
+            // Download vCard button
+            downloadVcardBtn.addEventListener('click', function() {
+                const vCardContent = generateVCardText();
+                const blob = new Blob([vCardContent], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                const name = document.getElementById('name').value;
+                const filename = name.replace(/\s+/g, '-').toLowerCase() + '.vcf';
+                
+                link.download = filename;
+                link.href = url;
+                link.click();
+                
+                // Clean up
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+            });
+            
+            // Share button - using Web Share API with enhanced fallbacks
+            shareBtn.addEventListener('click', async function() {
+                try {
+                    // First check if basic Web Share API is available
+                    if (!navigator.share) {
+                        // Fallback 1: Create temporary URL and show it
+                        await createSharableLink();
+                        return;
+                    }
+                    
+                    // Prepare clean versions of both sides
+                    const cleanFront = prepareCardForExport(true);
+                    const cleanBack = prepareCardForExport(false);
+                    
+                    // Capture front as canvas
+                    const frontCanvas = await html2canvas(cleanFront, {
+                        backgroundColor: null,
+                        scale: 2,
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    // Capture back as canvas
+                    const backCanvas = await html2canvas(cleanBack, {
+                        backgroundColor: null,
+                        scale: 2,
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    // Convert to blobs
+                    const frontBlob = await new Promise(resolve => {
+                        frontCanvas.toBlob(resolve, 'image/png');
+                    });
+                    
+                    const backBlob = await new Promise(resolve => {
+                        backCanvas.toBlob(resolve, 'image/png');
+                    });
+                    
+                    // Check if we can share files
+                    if (navigator.canShare && navigator.canShare({ files: [new File([frontBlob], 'front.png')] })) {
+                        // Share with files
+                        navigator.share({
+                            title: 'My Business Card',
+                            text: 'Check out my business card',
+                            files: [
+                                new File([frontBlob], 'business-card-front.png', { type: 'image/png' }),
+                                new File([backBlob], 'business-card-back.png', { type: 'image/png' })
+                            ]
+                        }).catch(err => {
+                            console.error('Sharing failed:', err);
+                            // Fallback to basic sharing if file sharing fails
+                            basicShare(frontCanvas.toDataURL());
+                        });
+                    } else {
+                        // Fallback to basic sharing without files
+                        basicShare(frontCanvas.toDataURL());
+                    }
+                } catch (error) {
+                    console.error('Error in share process:', error);
+                    
+                    // Final fallback - show download instructions
+                    alert('Sharing is not supported in your browser. Please use the download buttons instead.');
+                }
+            });
+            
+            // Basic share fallback
+            function basicShare(imageUrl) {
+                // If we can't share files, try to share a URL or just text
+                navigator.share({
+                    title: 'My Business Card',
+                    text: 'Check out my business card',
+                    url: document.location.href
+                }).catch(err => {
+                    console.error('Basic sharing failed:', err);
+                    
+                    // If even basic sharing fails, show URL container
+                    createSharableLink();
+                });
+            }
+            
+            // Share URL fallback
+            async function createSharableLink() {
+                // For a real implementation, this would create a URL to a hosted version
+                // Here we just show a placeholder - in production this could upload images to a server
+                shareUrlContainer.classList.remove('d-none');
+                
+                // In a real implementation, this would be a unique URL
+                shareUrlInput.value = window.location.href;
+                shareUrlInput.select();
+            }
+            
+            // Update card preview
+            function updateCardPreview() {
+                document.getElementById('nameDisplay').textContent = document.getElementById('name').value;
+                document.getElementById('titleDisplay').textContent = document.getElementById('title').value;
+                document.getElementById('phoneDisplay').textContent = document.getElementById('phone').value;
+                document.getElementById('emailDisplay').textContent = document.getElementById('email').value;
+                document.getElementById('websiteDisplay').textContent = document.getElementById('website').value;
+                document.getElementById('linkedinDisplay').textContent = document.getElementById('linkedin').value;
+                document.getElementById('facebookDisplay').textContent = document.getElementById('facebook').value;
+                document.getElementById('instagramDisplay').textContent = document.getElementById('instagram').value;
+                
+                const companyName = document.getElementById('companyName').value;
+                companyNameDisplay.textContent = companyName;
+                
+                // Update QR code with vCard format
+                qrCode.makeCode(generateVCardText());
+                
+                // Update back message
+                backMessageDisplay.textContent = document.getElementById('backMessage').value;
+            }
+            
+            // Generate text for QR code in vCard format for contact saving
+            function generateVCardText() {
+                const name = document.getElementById('name').value;
+                const nameParts = name.split(' ');
+                let firstName = nameParts[0] || '';
+                let lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+                
+                const title = document.getElementById('title').value;
+                const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
+                const website = document.getElementById('website').value;
+                const company = document.getElementById('companyName').value;
+                const linkedin = document.getElementById('linkedin').value;
+                const facebook = document.getElementById('facebook').value;
+                const instagram = document.getElementById('instagram').value;
+                
+                // Create vCard format
+                const vCard = [
+                    'BEGIN:VCARD',
+                    'VERSION:3.0',
+                    `N:${lastName};${firstName};;;`,
+                    `FN:${name}`,
+                    `TITLE:${title}`,
+                    `ORG:${company}`,
+                    `TEL;TYPE=WORK,VOICE:${phone}`,
+                    `EMAIL:${email}`,
+                    `URL:${document.getElementById('website').value}`,
+                    `X-SOCIALPROFILE;TYPE=linkedin:${linkedin}`,
+                    `X-SOCIALPROFILE;TYPE=facebook:${facebook}`,
+                    `X-SOCIALPROFILE;TYPE=instagram:${instagram}`,
+                    'END:VCARD'
+                ].join('\r\n');
+                
+                return vCard;
+            }
+            
+            // Initial card update
+            updateCardPreview();
+        });
+    </script>
+</body>
+</html>
