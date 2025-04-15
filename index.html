@@ -545,14 +545,55 @@
             }
             
             // Share URL fallback
-            async function createSharableLink() {
-                // For a real implementation, this would create a URL to a hosted version
-                // Here we just show a placeholder - in production this could upload images to a server
-                shareUrlContainer.classList.remove('d-none');
-                
-                // In a real implementation, this would be a unique URL
-                shareUrlInput.value = window.location.href;
-                shareUrlInput.select();
+            async function createSharableLink() 
+            {
+                try {
+                    // Get all form data to create a unique identifier
+                    
+                    const cardData = {
+                        companyName: document.getElementById('companyName').value,
+                        name: document.getElementById('name').value,
+                        title: document.getElementById('title').value,
+                        phone: document.getElementById('phone').value,
+                        email: document.getElementById('email').value,
+                        website: document.getElementById('website').value,
+                        linkedin: document.getElementById('linkedin').value,
+                        facebook: document.getElementById('facebook').value,
+                        instagram: document.getElementById('instagram').value,
+                        logoColor: document.getElementById('logoColor').value,
+                        frontTextColor: document.getElementById('frontTextColor').value,
+                        frontBackgroundColor: document.getElementById('frontBackgroundColor').value,
+                        backBackgroundColor: document.getElementById('backBackgroundColor').value,
+                        backMessage: document.getElementById('backMessage').value,
+                        timestamp: new Date().getTime() // Add timestamp for additional uniqueness
+                    };
+                    
+                    // Generate a unique identifier using a hash function
+                    const uniqueId = await generateUniqueId(cardData);
+                    
+                    // Create a compressed representation of the card data
+                    const encodedData = encodeCardData(cardData);
+                    
+                    // Construct the shareable URL
+                    const shareableUrl = `${window.location.origin}${window.location.pathname}?card=${encodedData}&id=${uniqueId}`;
+                    
+                    // Update the UI
+                    const shareUrlContainer = document.getElementById('shareUrlContainer');
+                    const shareUrlInput = document.getElementById('shareUrlInput');
+                    
+                    shareUrlContainer.classList.remove('d-none');
+                    shareUrlInput.value = shareableUrl;
+                    shareUrlInput.select();
+                    
+                    // Log success message
+                    console.log('Shareable link created successfully');
+                    
+                    return shareableUrl;
+                } catch (error) {
+                    console.error('Error creating shareable link:', error);
+                    alert('Failed to create shareable link. Please try again.');
+                    return null;
+                }
             }
             
             // Update card preview

@@ -126,7 +126,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    padding-right: 15px;
+    /* padding-right: 0px; */
     text-align: right;
 }
 
