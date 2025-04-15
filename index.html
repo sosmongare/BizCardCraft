@@ -545,56 +545,217 @@
             }
             
             // Share URL fallback
-            async function createSharableLink() 
-            {
-                try {
-                    // Get all form data to create a unique identifier
-                    
-                    const cardData = {
-                        companyName: document.getElementById('companyName').value,
-                        name: document.getElementById('name').value,
-                        title: document.getElementById('title').value,
-                        phone: document.getElementById('phone').value,
-                        email: document.getElementById('email').value,
-                        website: document.getElementById('website').value,
-                        linkedin: document.getElementById('linkedin').value,
-                        facebook: document.getElementById('facebook').value,
-                        instagram: document.getElementById('instagram').value,
-                        logoColor: document.getElementById('logoColor').value,
-                        frontTextColor: document.getElementById('frontTextColor').value,
-                        frontBackgroundColor: document.getElementById('frontBackgroundColor').value,
-                        backBackgroundColor: document.getElementById('backBackgroundColor').value,
-                        backMessage: document.getElementById('backMessage').value,
-                        timestamp: new Date().getTime() // Add timestamp for additional uniqueness
-                    };
-                    
-                    // Generate a unique identifier using a hash function
-                    const uniqueId = await generateUniqueId(cardData);
-                    
-                    // Create a compressed representation of the card data
-                    const encodedData = encodeCardData(cardData);
-                    
-                    // Construct the shareable URL
-                    const shareableUrl = `${window.location.origin}${window.location.pathname}?card=${encodedData}&id=${uniqueId}`;
-                    
-                    // Update the UI
-                    const shareUrlContainer = document.getElementById('shareUrlContainer');
-                    const shareUrlInput = document.getElementById('shareUrlInput');
-                    
-                    shareUrlContainer.classList.remove('d-none');
-                    shareUrlInput.value = shareableUrl;
-                    shareUrlInput.select();
-                    
-                    // Log success message
-                    console.log('Shareable link created successfully');
-                    
-                    return shareableUrl;
-                } catch (error) {
-                    console.error('Error creating shareable link:', error);
-                    alert('Failed to create shareable link. Please try again.');
-                    return null;
-                }
+            async function createSharableLink() {
+    try {
+        // Get all form data to create a unique identifier
+        const cardData = {
+            companyName: document.getElementById('companyName').value,
+            name: document.getElementById('name').value,
+            title: document.getElementById('title').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            website: document.getElementById('website').value,
+            linkedin: document.getElementById('linkedin').value,
+            facebook: document.getElementById('facebook').value,
+            instagram: document.getElementById('instagram').value,
+            logoColor: document.getElementById('logoColor').value,
+            frontTextColor: document.getElementById('frontTextColor').value,
+            frontBackgroundColor: document.getElementById('frontBackgroundColor').value,
+            backBackgroundColor: document.getElementById('backBackgroundColor').value,
+            backMessage: document.getElementById('backMessage').value,
+            timestamp: new Date().getTime() // Add timestamp for additional uniqueness
+        };
+        
+        // Generate a unique identifier using a hash function
+        const uniqueId = await generateUniqueId(cardData);
+        
+        // Create a compressed representation of the card data
+        const encodedData = encodeCardData(cardData);
+        
+        // Construct the shareable URL
+        const shareableUrl = `${window.location.origin}${window.location.pathname}?card=${encodedData}&id=${uniqueId}`;
+        
+        // Update the UI
+        const shareUrlContainer = document.getElementById('shareUrlContainer');
+        const shareUrlInput = document.getElementById('shareUrlInput');
+        
+        shareUrlContainer.classList.remove('d-none');
+        shareUrlInput.value = shareableUrl;
+        shareUrlInput.select();
+        
+        // Log success message
+        console.log('Shareable link created successfully');
+        
+        return shareableUrl;
+    } catch (error) {
+        console.error('Error creating shareable link:', error);
+        alert('Failed to create shareable link. Please try again.');
+        return null;
+    }
+}
+
+/**
+ * Generates a hash-based unique identifier from the card data
+ * @param {Object} data - The card data object
+ * @returns {Promise<string>} - A unique identifier string
+ */
+async function generateUniqueId(data) {
+    // Create a string representation of the data
+    const dataString = JSON.stringify(data);
+    
+    // Use a hash algorithm if available in the browser
+    if (window.crypto && window.crypto.subtle) {
+        try {
+            // Convert the string to an array buffer
+            const encoder = new TextEncoder();
+            const dataBuffer = encoder.encode(dataString);
+            
+            // Generate a SHA-256 hash
+            const hashBuffer = await window.crypto.subtle.digest('SHA-256', dataBuffer);
+            
+            // Convert the hash to a hex string
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            // Return a shorter version of the hash (first 12 characters)
+            return hashHex.slice(0, 12);
+        } catch (e) {
+            // Fall back to simpler method if crypto API fails
+            console.warn('Crypto API failed, using fallback method');
+            return fallbackUniqueId(dataString);
+        }
+    } else {
+        // Fallback for browsers without crypto support
+        return fallbackUniqueId(dataString);
+    }
+}
+
+/**
+ * Fallback function to generate a unique ID when crypto is not available
+ * @param {string} str - String to generate ID from
+ * @returns {string} - A simple hash code
+ */
+function fallbackUniqueId(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    
+    // Convert to a positive hexadecimal string and add timestamp
+    const positiveHash = Math.abs(hash).toString(16);
+    const timestamp = Date.now().toString(36).slice(-4);
+    
+    return positiveHash + timestamp;
+}
+
+/**
+ * Compresses and encodes the card data for URL sharing
+ * @param {Object} data - The card data to encode
+ * @returns {string} - URL-safe encoded string
+ */
+function encodeCardData(data) {
+    // Create a minimal representation with abbreviated keys
+    const minimalData = {
+        cn: data.companyName,
+        n: data.name,
+        t: data.title,
+        p: data.phone,
+        e: data.email,
+        w: data.website,
+        // Only include social media if they're not empty
+        ...(data.linkedin && { li: data.linkedin }),
+        ...(data.facebook && { fb: data.facebook }),
+        ...(data.instagram && { ig: data.instagram }),
+        // Colors
+        lc: data.logoColor.replace('#', ''),
+        tc: data.frontTextColor.replace('#', ''),
+        fc: data.frontBackgroundColor.replace('#', ''),
+        bc: data.backBackgroundColor.replace('#', ''),
+        // Message only if not default
+        ...(data.backMessage !== 'Scan to connect' && { bm: data.backMessage })
+    };
+    
+    // Convert to JSON and encode for URL
+    const jsonString = JSON.stringify(minimalData);
+    return btoa(encodeURIComponent(jsonString));
+}
+
+/**
+ * Decodes card data from URL parameter
+ * @param {string} encodedData - The encoded card data string
+ * @returns {Object|null} - Decoded card data or null if invalid
+ */
+function decodeCardData(encodedData) {
+    try {
+        const jsonString = decodeURIComponent(atob(encodedData));
+        const minimalData = JSON.parse(jsonString);
+        
+        // Convert back to full object
+        return {
+            companyName: minimalData.cn,
+            name: minimalData.n,
+            title: minimalData.t,
+            phone: minimalData.p,
+            email: minimalData.e,
+            website: minimalData.w,
+            linkedin: minimalData.li || '',
+            facebook: minimalData.fb || '',
+            instagram: minimalData.ig || '',
+            logoColor: '#' + minimalData.lc,
+            frontTextColor: '#' + minimalData.tc,
+            frontBackgroundColor: '#' + minimalData.fc,
+            backBackgroundColor: '#' + minimalData.bc,
+            backMessage: minimalData.bm || 'Scan to connect'
+        };
+    } catch (error) {
+        console.error('Error decoding card data:', error);
+        return null;
+    }
+}
+
+// Function to check if the page was loaded with a shared card
+function loadSharedCard() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedCard = urlParams.get('card');
+    
+    if (encodedCard) {
+        try {
+            const cardData = decodeCardData(encodedCard);
+            if (cardData) {
+                // Populate form with the decoded data
+                document.getElementById('companyName').value = cardData.companyName;
+                document.getElementById('name').value = cardData.name;
+                document.getElementById('title').value = cardData.title;
+                document.getElementById('phone').value = cardData.phone;
+                document.getElementById('email').value = cardData.email;
+                document.getElementById('website').value = cardData.website;
+                document.getElementById('linkedin').value = cardData.linkedin;
+                document.getElementById('facebook').value = cardData.facebook;
+                document.getElementById('instagram').value = cardData.instagram;
+                document.getElementById('logoColor').value = cardData.logoColor;
+                document.getElementById('frontTextColor').value = cardData.frontTextColor;
+                document.getElementById('frontBackgroundColor').value = cardData.frontBackgroundColor;
+                document.getElementById('backBackgroundColor').value = cardData.backBackgroundColor;
+                document.getElementById('backMessage').value = cardData.backMessage;
+                
+                // Trigger update to refresh the card display
+                updateCardDisplay();
+                
+                console.log('Shared card loaded successfully');
+                return true;
             }
+        } catch (error) {
+            console.error('Error loading shared card:', error);
+        }
+    }
+    return false;
+}
+
+
+
+            //  -- end
             
             // Update card preview
             function updateCardPreview() {
